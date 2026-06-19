@@ -90,6 +90,9 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- NOTE Adding jk to enter normal mode with 300ms delay
+vim.out.timeoutlen = 300
+vim.keymap.set('i', 'jk', '<Esc>')
 -- Disable netrw in favor of telescope-file-browser
 vim.g.loaded_netrwPlugin = 1
 vim.g.loaded_netrw = 1
@@ -193,6 +196,12 @@ vim.diagnostic.config {
 
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+vim.keymap.set('n', '<leader>cp', function()
+  local path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
+  vim.fn.setreg('+', path)
+  vim.notify('Copied: ' .. path)
+end, { desc = '[C]opy relative [P]ath' })
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -287,6 +296,10 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      current_line_blame = false, --off by default, we use keymap toggle
+    },
+    keys = {
+      { '<leader>tb', '<cmd>Gitsigns toggle_current_line_blame<cr>', desc = '[T]oggle git [B]lame' },
     },
   },
 
@@ -392,6 +405,9 @@ require('lazy').setup({
         --   },
         -- },
         -- pickers = {}
+        defaults = {
+          path_display = { 'filename_first' },
+        },
         extensions = {
           ['ui-select'] = { require('telescope.themes').get_dropdown() },
         },
@@ -488,7 +504,7 @@ require('lazy').setup({
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
       { 'mason-org/mason.nvim', opts = {} },
-      { "mason-org/mason-lspconfig.nvim", opts = {} },
+      { 'mason-org/mason-lspconfig.nvim', opts = {} },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
