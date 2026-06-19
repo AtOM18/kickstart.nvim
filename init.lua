@@ -288,6 +288,7 @@ require('lazy').setup({
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
+    event = { 'BufReadPre', 'BufNewFile' },
     opts = {
       signs = {
         add = { text = '+' },
@@ -296,7 +297,7 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
-      current_line_blame = false, --off by default, we use keymap toggle
+      current_line_blame = false,
     },
     keys = {
       { '<leader>tb', '<cmd>Gitsigns toggle_current_line_blame<cr>', desc = '[T]oggle git [B]lame' },
@@ -831,6 +832,7 @@ require('lazy').setup({
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       vim.cmd.colorscheme 'tokyonight-night'
+      vim.api.nvim_set_hl(0, 'GitSignsCurrentLineBlame', { fg = '#76cce0', italic = true })
     end,
   },
 
