@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- NOTE Adding jk to enter normal mode with 300ms delay
-vim.out.timeoutlen = 300
+vim.opt.timeoutlen = 300
 vim.keymap.set('i', 'jk', '<Esc>')
 -- Disable netrw in favor of telescope-file-browser
 vim.g.loaded_netrwPlugin = 1
