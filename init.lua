@@ -191,7 +191,11 @@ vim.diagnostic.config {
   virtual_lines = false, -- Teest shows up underneath the line, with virtual lines
 
   -- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
-  jump = { float = true },
+  jump = {
+    on_jump = function(_, bufnr)
+      vim.diagnostic.open_float { bufnr = bufnr, scope = 'cursor', focus = false }
+    end,
+  },
 }
 
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -408,6 +412,17 @@ require('lazy').setup({
         -- pickers = {}
         defaults = {
           path_display = { 'filename_first' },
+          -- Narrow panes (e.g. tmux splits): stack vertically with the file list on top and the preview below
+          layout_strategy = 'flex',
+          layout_config = {
+            flex = { flip_columns = 120 },
+            vertical = {
+              mirror = true,
+              prompt_position = 'bottom',
+              preview_height = 0.5,
+              preview_cutoff = 20,
+            },
+          },
         },
         extensions = {
           ['ui-select'] = { require('telescope.themes').get_dropdown() },
